@@ -2,22 +2,25 @@ package task;
 
 public class Subtask extends Task {
 
-    protected int epicId;
+    private int epicId;
 
-    public Subtask(int id, String title, String descriptions, Status status) {
+    public Subtask(Integer id, String title, String descriptions, Status status) {
         super(id, title, descriptions, status);
     }
 
-    public Subtask (String title, String descriptions, Status status) {
+    public Subtask(String title, String descriptions, Status status) {
         super(title, descriptions, status);
     }
 
-    public int getEpicId() { return epicId;  }
+    public int getEpicId() {
+        return epicId;
+    }
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + getId() +
+        return "Subtask{" +
+                "epic_id=" + getEpicId() +
+                ", id=" + getId() +
                 ", title='" + getTitle() + '\'' +
                 ", descriptions='" + getDescriptions() + '\'' +
                 ", status='" + getStatus() + '\'' +

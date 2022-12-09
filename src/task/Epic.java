@@ -4,17 +4,19 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-protected ArrayList<Integer> subtaskId = new ArrayList<>();
+    private ArrayList<Integer> subtaskId = new ArrayList<>();
 
-    public Epic(int id, String title, String descriptions, Status status) {
-        super( id, title, descriptions, status);
+    public Epic(Integer id, String title, String descriptions, Status status) {
+        super(id, title, descriptions, status);
     }
 
     public Epic(String title, String descriptions, Status status) {
+
         super(title, descriptions, status);
     }
 
     public boolean isEpic() {
+
         return true;
     }
 
