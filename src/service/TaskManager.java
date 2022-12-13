@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class TaskManager {
 
 
-    protected int nextId = 0;
+    private int nextId = 0;
     private HashMap<Integer, Task> taskMap = new HashMap<>();
     private HashMap<Integer, Epic> epicMap = new HashMap<>();
     private HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
@@ -23,14 +23,14 @@ public class TaskManager {
         return taskMap.get(id);
     }
 
-    public Epic getEpic(int id) {
+    public Epic getEpic(int epicId) {
 
-        return epicMap.get(id);
+        return epicMap.get(epicId);
     }
 
-    public Subtask getSubtask(int id) {
+    public Subtask getSubtask(int subId) {
 
-        return subtaskMap.get(id);
+        return subtaskMap.get(subId);
     }
 
     public int addNewTask(Task task) {
@@ -55,44 +55,35 @@ public class TaskManager {
 
     }
 
-    public void updateTask(Task task, int id) { //удалить int id и добавить вмесо id task
-
-        taskMap.put(id, task);
+    public void updateTask(Task task) {
+        taskMap.put(task.getId(), task);
     }
 
-    public void updateEpic(Epic epic, int id) {
+    public void updateEpic(Epic epic) {
 
-        epicMap.put(id, epic);
-        updateEpicStatus(id);
+        epicMap.put(epic.getId(), epic);
+        updateEpicStatus(epic.getId());
     }
 
-    public void updateSubtask(Subtask subtask, int id) {
-
-        subtaskMap.put(id, subtask);
+    public void updateSubtask(Subtask subtask) {
+        subtaskMap.put(subtask.getId(), subtask);
+        Epic epic = epicMap.get(subtask.getEpicId());
+        updateEpicStatus(subtask.getEpicId());
     }
 
     public ArrayList<Task> getAllTask() {
 
-        ArrayList<Task> taskList = new ArrayList<>();
-        for (Integer value : taskMap.keySet()) {
-            taskList.add(taskMap.get(value));
-        }
+        ArrayList<Task> taskList = new ArrayList(taskMap.values());
         return taskList;
     }
 
     public ArrayList<Subtask> getAllSubtask() {
-        ArrayList<Subtask> subtaskList = new ArrayList<>();
-        for (Integer value : subtaskMap.keySet()) {
-            subtaskList.add(subtaskMap.get(value));
-        }
+        ArrayList<Subtask> subtaskList = new ArrayList(subtaskMap.values());
         return subtaskList;
     }
 
     public ArrayList<Epic> getAllEpic() {
-        ArrayList<Epic> epicList = new ArrayList<>();
-        for (Integer value : epicMap.keySet()) {
-            epicList.add(epicMap.get(value));
-        }
+        ArrayList<Epic> epicList = new ArrayList(epicMap.values());
         return epicList;
     }
 
@@ -101,34 +92,34 @@ public class TaskManager {
     }
 
     public void clearEpic() {
+        subtaskMap.clear();
         epicMap.clear();
     }
 
-    public void clearSubtask(int id) {
+    public void clearSubtask(int subId) {
         subtaskMap.clear();
+        for (Epic epic : epicMap.values()) {
+            epic.getSubtaskId().clear();
+            updateEpicStatus(subtaskMap.get(subId).getEpicId());
+        }
     }
 
     public void deleteTask(int id) {
         taskMap.remove(id);
     }
 
-    public void deleteEpic(int id) {
-        epicMap.remove(id);
-        for (Integer subId : subtaskMap.keySet()) {
-            if (id == subtaskMap.get(subId).getEpicId()) {
-                subtaskMap.remove(subId);
-                subtaskMap.clear();
-            }
+    public void deleteEpic(int epicId) {
+        for (Integer subId : epicMap.get(epicId).getSubtaskId()) {
+            subtaskMap.remove(subId);
         }
-        updateEpicStatus(id);
+        epicMap.remove(epicId);
+        updateEpicStatus(epicId);
     }
 
-    public void deleteSubtask(int subId, int epicId) {
-        for (Integer subtaskId : subtaskMap.keySet()) {
-            if (epicId == subtaskMap.get(subtaskId).getEpicId()) {
-                subtaskMap.remove(subtaskId);
-            }
-        }
+    public void deleteSubtask(int subId) {
+        int epicId = subtaskMap.get(subId).getEpicId();
+        epicMap.get(subtaskMap.get(subId).getEpicId()).getSubtaskId().remove((Integer) subId);
+        subtaskMap.remove(subId);
         updateEpicStatus(epicId);
     }
 
@@ -145,7 +136,7 @@ public class TaskManager {
     }
 
 
-    public void updateEpicStatus(int epicId) {
+    private void updateEpicStatus(int epicId) {
         int statusNew = 0;
         int statusDone = 0;
         Status value;
