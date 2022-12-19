@@ -1,13 +1,22 @@
+import service.InMemoryHistoryManager;
+import service.InMemoryTaskManager;
+import service.Manager;
 import service.TaskManager;
 import task.Epic;
 import task.Status;
 import task.Subtask;
 import task.Task;
 
+import java.util.List;
+
+
+
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         Task task1 = new Task("Task #1", "Task1 description", Status.NEW);
         Task task2 = new Task("Task #2", "Task2 description", Status.IN_PROGRESS);
@@ -19,6 +28,23 @@ public class Main {
         Subtask subtask2 = new Subtask(2, "Subtask #1-2", "Subtask2 description", Status.IN_PROGRESS);
         Subtask subtask3 = new Subtask(2, "Subtask #2-2", "Subtask2 description", Status.DONE);
         Subtask subtask4 = new Subtask(2, "Subtask #2-1", "Subtask2 description", Status.DONE);
+
+        taskManager.addNewTask(task1);
+        taskManager.addNewTask(task2);
+        taskManager.addNewEpic(epic1);
+        taskManager.addNewEpic(epic2);
+        taskManager.addNewSubtask(subtask1, epic1.getId());
+        taskManager.addNewSubtask(subtask2, epic1.getId());
+        taskManager.addNewSubtask(subtask3, epic2.getId());
+        taskManager.addNewSubtask(subtask4, epic2.getId());
+
+        taskManager.getEpic(2);
+        taskManager.getSubtask(2);
+        taskManager.getTask(1);
+        taskManager.getTask(2);
+        taskManager.getTask(1);
+
+
 
 
         System.out.println("Таски");
@@ -32,6 +58,10 @@ public class Main {
         System.out.println(subtask2);
         System.out.println(subtask3);
         System.out.println(subtask4);
+
+
+        List<Task> history = taskManager.getHistory();
+        System.out.println(history);
 
 
 
