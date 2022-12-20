@@ -1,6 +1,6 @@
 package com.yandex.volkov.java_kanban;
-import com.yandex.volkov.java_kanban.service.history.InMemoryHistoryManager;
-import com.yandex.volkov.java_kanban.service.history.InMemoryTaskManager;
+import com.yandex.volkov.java_kanban.managers.history.InMemoryHistoryManager;
+import com.yandex.volkov.java_kanban.managers.task.InMemoryTaskManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
