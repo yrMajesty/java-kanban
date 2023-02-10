@@ -1,46 +1,48 @@
 package com.yandex.volkov.java_kanban;
-import com.yandex.volkov.java_kanban.managers.history.InMemoryHistoryManager;
-import com.yandex.volkov.java_kanban.managers.task.InMemoryTaskManager;
+
+import com.yandex.volkov.java_kanban.managers.Manager;
+import com.yandex.volkov.java_kanban.managers.task.TaskManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
-
-import java.util.List;
 
 
 public class Main {
 
     public static void main(String[] args) {
 
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+        TaskManager taskManager = Manager.getDefault();
 
-        Task task1 = new Task("Task #1", "Task1 description", Status.NEW);
-        Task task2 = new Task("Task #2", "Task2 description", Status.IN_PROGRESS);
 
-        Epic epic1 = new Epic(1, "Epic #1", "Epic1 description", Status.NEW);
-        Epic epic2 = new Epic(2, "Epic #2", "Epic2 description", Status.IN_PROGRESS);
+        Task task1 = new Task("Task #1", "#1 Тут могла быть ваша реклама", Status.NEW);
+        Task task2 = new Task("Task #2", "#2 Тут могла быть ваша реклама", Status.IN_PROGRESS);
 
-        Subtask subtask1 = new Subtask(1, "Subtask #1-1", "Subtask1 description", Status.NEW);
-        Subtask subtask2 = new Subtask(2, "Subtask #1-2", "Subtask2 description", Status.IN_PROGRESS);
-        Subtask subtask3 = new Subtask(2, "Subtask #2-2", "Subtask2 description", Status.DONE);
-        Subtask subtask4 = new Subtask(2, "Subtask #2-1", "Subtask2 description", Status.DONE);
+        Epic epic1 = new Epic("Epic #1", "Epic1 description", Status.NEW);
+        Epic epic2 = new Epic("Epic #2", "Epic2 description", Status.IN_PROGRESS);
+
+        Subtask subtask1 = new Subtask(3, "Subtask #1-1", "Subtask1 description", Status.NEW);
+        Subtask subtask2 = new Subtask(3, "Subtask #1-2", "Subtask2 description", Status.IN_PROGRESS);
+        Subtask subtask3 = new Subtask(3, "Subtask #1-3", "Subtask3 description", Status.DONE);
+        Subtask subtask4 = new Subtask(4, "Subtask #2-1", "Subtask1 description", Status.DONE);
 
         taskManager.addNewTask(task1);
         taskManager.addNewTask(task2);
         taskManager.addNewEpic(epic1);
         taskManager.addNewEpic(epic2);
-        taskManager.addNewSubtask(subtask1, epic1.getId());
-        taskManager.addNewSubtask(subtask2, epic1.getId());
-        taskManager.addNewSubtask(subtask3, epic2.getId());
-        taskManager.addNewSubtask(subtask4, epic2.getId());
+        taskManager.addNewSubtask(subtask1);
+        taskManager.addNewSubtask(subtask2);
+        taskManager.addNewSubtask(subtask3);
+        taskManager.addNewSubtask(subtask4);
 
-        taskManager.getEpic(2);
-        taskManager.getSubtask(2);
+        taskManager.getSubtask(5);
+        taskManager.getEpic(3);
+        taskManager.getEpic(4);
         taskManager.getTask(1);
         taskManager.getTask(2);
         taskManager.getTask(1);
+        taskManager.getEpic(4);
+        taskManager.getSubtask(7);
 
 
         System.out.println("Таски");
@@ -56,10 +58,17 @@ public class Main {
         System.out.println(subtask4);
 
         System.out.println("История просмотренных задач");
-        List<Task> history = taskManager.getHistory();
-        System.out.println(history);
+
+        System.out.println(taskManager.getHistory());
+
+        taskManager.deleteTask(1);
+        System.out.println("История просмотренных задач после удаления");
+        System.out.println(taskManager.getHistory());
 
 
+        taskManager.deleteEpic(3);
+        System.out.println("История просмотренных задач после удаления эпиков");
+        System.out.println(taskManager.getHistory());
     }
 
 }

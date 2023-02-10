@@ -5,7 +5,6 @@ import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -13,27 +12,15 @@ public interface TaskManager {
 
     Task getTask(int id);
 
-    Epic getEpic(int epicId);
+    Epic getEpic(int id);
 
-    Subtask getSubtask(int subId);
+    Subtask getSubtask(int id);
 
     int addNewTask(Task task);
 
     int addNewEpic(Epic epic);
 
-    int addNewSubtask(Subtask subtask, int epicId);
-
-    void updateTask(Task task);
-
-    void updateEpic(Epic epic);
-
-    void updateSubtask(Subtask subtask);
-
-    ArrayList<Task> getAllTask();
-
-    ArrayList<Subtask> getAllSubtask();
-
-    ArrayList<Epic> getAllEpic();
+    int addNewSubtask(Subtask subtask);
 
     void clearTask();
 
@@ -43,12 +30,11 @@ public interface TaskManager {
 
     void deleteTask(int id);
 
-    void deleteEpic(int epicId);
+    void deleteEpic(int id);
 
-    void deleteSubtask(int subId);
+    void deleteSubtaskById(Integer id);
 
-    ArrayList<Subtask> getAllSubtaskInEpic(int epicId);
-
+    List<Subtask> getAllSubtaskInEpic(int id);
 
 }
 

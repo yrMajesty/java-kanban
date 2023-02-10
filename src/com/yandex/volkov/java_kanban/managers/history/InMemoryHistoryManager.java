@@ -2,29 +2,105 @@ package com.yandex.volkov.java_kanban.managers.history;
 
 import com.yandex.volkov.java_kanban.task.Task;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> historyList = new LinkedList<>();
+    private final Map<Integer, Node<Task>> historyMap = new HashMap<>();
+    private Node<Task> head;
+    private Node<Task> tail;
 
-    @Override
-    public List<Task> getHistory() {
-        return historyList;
-    }
 
     @Override
     public void add(Task task) {
-        final int maxSize = 10;
-        if (historyList.size() >= maxSize) {
-            historyList.remove(0);
-            historyList.add(task);
+        Node<Task> node = linkLast(task);
+        if (task == null) {
+            return;
+        }
+        if (historyMap.containsKey(task.getId())) {
+            removeNode(historyMap.get(task.getId()));
+        }
 
+        historyMap.put(task.getId(), node);
+    }
+
+    @Override
+    public void remove(int id) {
+        removeNode(historyMap.get(id));
+        historyMap.remove(id);
+    }
+
+
+    @Override
+    public List<Task> getHistory() {
+        return getTasks();
+    }
+
+
+    private List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>();
+        Node<Task> current = head;
+        while (current != null) {
+            if (current.data != null) tasks.add(current.data);
+            current = current.next;
+        }
+
+        return tasks;
+    }
+
+
+    private Node<Task> linkLast(Task task) {
+        Node<Task> newNode = new Node<>(tail, task, null);
+
+        if (tail == null) {
+            head = newNode;
         } else {
-            historyList.add(task);
+            tail.next = newNode;
+        }
+
+        tail = newNode;
+
+        return newNode;
+    }
+
+
+    private void removeNode(Node<Task> node) {
+        if (node == null) return;
+        if (node.equals(head)) {
+            head = node.next;
+
+            if (node.next != null) {
+                node.next.prev = null;
+            }
+        } else {
+            node.prev.next = node.next;
+
+            if (node.next != null) {
+                node.next.prev = node.prev;
+            }
         }
     }
+
+
 }
+
+class Node<Task> {
+
+    protected Task data;
+    protected Node prev;
+    protected Node next;
+
+    Node(Node<Task> prev, Task data, Node<Task> next) {
+        this.data = data;
+        this.prev = prev;
+        this.next = next;
+    }
+
+
+}
+
 
 
 

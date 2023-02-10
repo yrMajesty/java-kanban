@@ -3,23 +3,24 @@ package com.yandex.volkov.java_kanban.task;
 import java.util.Objects;
 
 public class Task {
-    protected Integer id;
-    protected String title;
-    protected String descriptions;
-    protected Status status;
-
-    public Task(Integer id, String title, String descriptions, Status status) {
-        this.id = id;
-        this.title = title;
-        this.descriptions = descriptions;
-        this.status = status;
-    }
+    Integer id;
+    String title;
+    String descriptions;
+    Status status;
 
     public Task(String title, String descriptions, Status status) {
         this.title = title;
         this.descriptions = descriptions;
         this.status = status;
     }
+
+    public Task(int id, String title, String descriptions, Status status) {
+        this.id = id;
+        this.title = title;
+        this.descriptions = descriptions;
+        this.status = status;
+    }
+
 
     public Integer getId() {
         return id;
@@ -58,20 +59,14 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions)
-                && Objects.equals(status, task.status);
+        return id == task.id && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions) && Objects.equals(status, task.status);
 
     }
 
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + getId() +
-                ", title='" + getTitle() + '\'' +
-                ", descriptions='" + getDescriptions() + '\'' +
-                ", status='" + getStatus() + '\'' +
-                '}';
+        return "Task{" + "id=" + getId() + ", title='" + getTitle() + '\'' + ", descriptions='" + getDescriptions() + '\'' + ", status='" + getStatus() + '\'' + '}';
     }
 
 
