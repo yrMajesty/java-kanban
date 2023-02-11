@@ -15,14 +15,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        Node<Task> node = linkLast(task);
-        if (task == null) {
-            return;
-        }
+
         if (historyMap.containsKey(task.getId())) {
             removeNode(historyMap.get(task.getId()));
         }
-
+        Node<Task> node = linkLast(task);
         historyMap.put(task.getId(), node);
     }
 
@@ -43,7 +40,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         List<Task> tasks = new ArrayList<>();
         Node<Task> current = head;
         while (current != null) {
-            if (current.data != null) tasks.add(current.data);
             current = current.next;
         }
 
