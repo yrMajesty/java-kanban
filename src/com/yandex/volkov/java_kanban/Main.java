@@ -1,18 +1,23 @@
 package com.yandex.volkov.java_kanban;
 
 import com.yandex.volkov.java_kanban.managers.Manager;
-import com.yandex.volkov.java_kanban.managers.task.TaskManager;
+import com.yandex.volkov.java_kanban.managers.task.FileBackedTasksManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
+
+import java.io.File;
+import java.nio.file.Path;
 
 
 public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager taskManager = Manager.getDefault();
+        Path path = Path.of("data.csv");
+        File file = new File(String.valueOf(path));
+        FileBackedTasksManager taskManager = new FileBackedTasksManager(Manager.getDefaultHistory(), file);
 
 
         Task task1 = new Task("Task #1", "#1 Тут могла быть ваша реклама", Status.NEW);
@@ -21,10 +26,10 @@ public class Main {
         Epic epic1 = new Epic("Epic #1", "Epic1 description", Status.NEW);
         Epic epic2 = new Epic("Epic #2", "Epic2 description", Status.IN_PROGRESS);
 
-        Subtask subtask1 = new Subtask(3, "Subtask #1-1", "Subtask1 description", Status.NEW);
-        Subtask subtask2 = new Subtask(3, "Subtask #1-2", "Subtask2 description", Status.IN_PROGRESS);
-        Subtask subtask3 = new Subtask(3, "Subtask #1-3", "Subtask3 description", Status.DONE);
-        Subtask subtask4 = new Subtask(4, "Subtask #2-1", "Subtask1 description", Status.DONE);
+        Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask1 description", Status.NEW, 3);
+        Subtask subtask2 = new Subtask("Subtask #1-2", "Subtask2 description", Status.IN_PROGRESS, 3);
+        Subtask subtask3 = new Subtask("Subtask #1-3", "Subtask3 description", Status.DONE, 3);
+        Subtask subtask4 = new Subtask("Subtask #2-1", "Subtask1 description", Status.DONE, 4);
 
         taskManager.addNewTask(task1);
         taskManager.addNewTask(task2);
@@ -42,7 +47,7 @@ public class Main {
         taskManager.getTask(2);
         taskManager.getTask(1);
         taskManager.getEpic(4);
-        taskManager.getSubtask(7);
+        taskManager.getSubtask(8);
 
 
         System.out.println("Таски");
@@ -57,18 +62,32 @@ public class Main {
         System.out.println(subtask3);
         System.out.println(subtask4);
 
-        System.out.println("История просмотренных задач");
+        System.out.println("history просмотренных задач");
 
         System.out.println(taskManager.getHistory());
 
         taskManager.deleteTask(1);
-        System.out.println("История просмотренных задач после удаления");
+        System.out.println("history просмотренных задач после удаления");
         System.out.println(taskManager.getHistory());
 
 
         taskManager.deleteEpic(3);
-        System.out.println("История просмотренных задач после удаления эпиков");
+        System.out.println("history просмотренных задач после удаления эпиков");
         System.out.println(taskManager.getHistory());
+
+
+        taskManager.loadFromFile();
+
+        System.out.println("Задачи");
+        System.out.println(taskManager.getAllTasks());
+        System.out.println("Эпики");
+        System.out.println(taskManager.getAllEpics());
+        System.out.println("Подзадачи");
+        System.out.println(taskManager.getAllSubtasks());
+        System.out.println("История");
+        System.out.println(taskManager.getHistory());
+
+
     }
 
 }

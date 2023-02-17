@@ -7,51 +7,136 @@ import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int nextId = 1;
-    private final Map<Integer, Task> taskMap = new HashMap<>();
-    private final Map<Integer, Epic> epicMap = new HashMap<>();
-    private final Map<Integer, Subtask> subtaskMap = new HashMap<>();
+    protected int nextId = 1;
+    protected Map<Integer, Task> taskMap = new HashMap<>();
+    protected Map<Integer, Epic> epicMap = new HashMap<>();
+    protected Map<Integer, Subtask> subtaskMap = new HashMap<>();
     HistoryManager historyManager = Manager.getDefaultHistory();
 
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
+
+    @Override
+    public List<Epic> getAllEpic() {
+        if (epicMap.size() == 0) {
+            System.out.println("Данные с EPIC отсутсвуют");
+            return null;
+        }
+        return new ArrayList<>(epicMap.values());
+    }
+
+    @Override
+    public List<Task> getAllTask() {
+        if (taskMap.size() == 0) {
+            System.out.println("Данные с TASK отсутсвуют");
+            return null;
+        }
+        return new ArrayList<>(taskMap.values());
+    }
+
+    @Override
+    public List<Subtask> getAllSubtask() {
+        if (subtaskMap.size() == 0) {
+            System.out.println("Данные с SUBTASK отсутсвуют");
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(subtaskMap.values());
+    }
 
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
+
+    public void addToHistory(int id) {
+        if (epicMap.containsKey(id)) {
+            historyManager.add(epicMap.get(id));
+        } else if (subtaskMap.containsKey(id)) {
+            historyManager.add(subtaskMap.get(id));
+        } else if (taskMap.containsKey(id)) {
+            historyManager.add(taskMap.get(id));
+        }
+    }
+
+    @Override
+    public void remove(int id) {
+        historyManager.remove(id);
+    }
+
     @Override
     public Task getTask(int id) {
-        historyManager.add(taskMap.get(id));
+        Task task = taskMap.get(id);
+        if (task != null) {
+            historyManager.add(taskMap.get(id));
+        }
         return taskMap.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
-        historyManager.add(epicMap.get(id));
+        Epic epic = epicMap.get(id);
+        if (epic != null) {
+            historyManager.add(epicMap.get(id));
+        }
         return epicMap.get(id);
     }
 
     @Override
+
     public Subtask getSubtask(int id) {
-        historyManager.add(subtaskMap.get(id));
+        Subtask subtask = subtaskMap.get(id);
+        if (subtask != null) {
+            historyManager.add(subtaskMap.get(id));
+        }
         return subtaskMap.get(id);
     }
 
     @Override
-    public int addNewTask(Task task) {
-        task.setId(nextId++);
-        taskMap.put(task.getId(), task);
-        return task.getId();
+    public List<Epic> getAllEpics() {
+        if (epicMap.size() == 0) {
+            System.out.println("Данные с EPIC отсутсвуют");
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(epicMap.values());
     }
 
     @Override
-    public int addNewEpic(Epic epic) {
+    public List<Subtask> getAllSubtasks() {
+        if (subtaskMap.size() == 0) {
+            System.out.println("Данные с SUBTASK отсутсвуют");
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(subtaskMap.values());
+    }
+
+    @Override
+    public List<Task> getAllTasks() {
+        if (taskMap.size() == 0) {
+            System.out.println("Данные с TASK отсутсвуют");
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(taskMap.values());
+    }
+
+    @Override
+    public Task addNewTask(Task task) {
+        if (task == null) return null;
+        task.setId(nextId++);
+        taskMap.put(task.getId(), task);
+        return task;
+    }
+
+    @Override
+    public Epic addNewEpic(Epic epic) {
+        if (epic == null) return null;
         epic.setId(nextId++);
         epicMap.put(epic.getId(), epic);
         for (Subtask subtask : subtaskMap.values()) {
@@ -59,26 +144,30 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.getSubtaskId().add(subtask.getId());
             }
         }
-        return epic.getId();
+        return epic;
     }
 
     @Override
-    public int addNewSubtask(Subtask subtask) {
-
+    public Subtask addNewSubtask(Subtask subtask) {
+        if (subtask == null) return null;
         subtask.setId(nextId++);
         subtaskMap.put(subtask.getId(), subtask);
+
         for (Epic epic : epicMap.values()) {
-            if (epic.getId() == subtask.getEpicId()) {
-                epic.getSubtaskId().add(subtask.getId());
+            if (epic != null) {
+                if (epic.getId() == subtask.getEpicId()) {
+                    epic.getSubtaskId().add(subtask.getId());
+                }
+                if (epicMap.containsKey(subtask.getEpicId())) {
+                    updateEpicStatus(epicMap.get(subtask.getEpicId()));
+                }
+            } else {
+                System.out.println("Данные с EPIC отсутсвуют");
+                return null;
             }
         }
-        if (epicMap.containsKey(subtask.getEpicId())) {
-            updateEpicStatus(epicMap.get(subtask.getEpicId()));
-
-        }
-        return subtask.getId();
+        return subtask;
     }
-
 
     @Override
     public void clearTask() {
@@ -142,7 +231,6 @@ public class InMemoryTaskManager implements TaskManager {
         return subtasksByEpic;
 
     }
-
 
     private void updateEpicStatus(Epic epic) {
         int statusNew = 0;

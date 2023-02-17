@@ -8,7 +8,16 @@ import com.yandex.volkov.java_kanban.task.Task;
 import java.util.List;
 
 public interface TaskManager {
+
+    List<Task> getAllTask();
+
+    List<Epic> getAllEpic();
+
+    List<Subtask> getAllSubtask();
+
     List<Task> getHistory();
+
+    void remove(int id);
 
     Task getTask(int id);
 
@@ -16,11 +25,17 @@ public interface TaskManager {
 
     Subtask getSubtask(int id);
 
-    int addNewTask(Task task);
+    List<Epic> getAllEpics();
 
-    int addNewEpic(Epic epic);
+    List<Subtask> getAllSubtasks();
 
-    int addNewSubtask(Subtask subtask);
+    List<Task> getAllTasks();
+
+    Task addNewTask(Task task);
+
+    Epic addNewEpic(Epic epic);
+
+    Subtask addNewSubtask(Subtask subtask);
 
     void clearTask();
 

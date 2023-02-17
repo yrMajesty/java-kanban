@@ -20,6 +20,9 @@ public class Epic extends Task {
         return subtasks;
     }
 
+    public void setSubtaskId(int id) {
+        subtasks.add(id);
+    }
 
     @Override
     public String toString() {
