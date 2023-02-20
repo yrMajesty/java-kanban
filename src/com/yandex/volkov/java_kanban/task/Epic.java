@@ -15,7 +15,6 @@ public class Epic extends Task {
         super(id, title, descriptions, status);
     }
 
-
     public List<Integer> getSubtaskId() {
         return subtasks;
     }

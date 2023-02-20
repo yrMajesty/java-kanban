@@ -2,6 +2,7 @@ package com.yandex.volkov.java_kanban;
 
 import com.yandex.volkov.java_kanban.managers.Manager;
 import com.yandex.volkov.java_kanban.managers.task.FileBackedTasksManager;
+import com.yandex.volkov.java_kanban.managers.task.TaskManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
@@ -15,9 +16,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Path path = Path.of("data.csv");
-        File file = new File(String.valueOf(path));
-        FileBackedTasksManager taskManager = new FileBackedTasksManager(Manager.getDefaultHistory(), file);
+   TaskManager taskManager = Manager.getDefault(Manager.getDefaultHistory());
+
 
 
         Task task1 = new Task("Task #1", "#1 Тут могла быть ваша реклама", Status.NEW);
@@ -75,17 +75,6 @@ public class Main {
         System.out.println("history просмотренных задач после удаления эпиков");
         System.out.println(taskManager.getHistory());
 
-
-        taskManager.loadFromFile();
-
-        System.out.println("Задачи");
-        System.out.println(taskManager.getAllTasks());
-        System.out.println("Эпики");
-        System.out.println(taskManager.getAllEpics());
-        System.out.println("Подзадачи");
-        System.out.println(taskManager.getAllSubtasks());
-        System.out.println("История");
-        System.out.println(taskManager.getHistory());
 
 
     }

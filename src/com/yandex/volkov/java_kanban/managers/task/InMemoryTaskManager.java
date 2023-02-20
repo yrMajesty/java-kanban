@@ -11,10 +11,10 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int nextId = 1;
-    protected Map<Integer, Task> taskMap = new HashMap<>();
-    protected Map<Integer, Epic> epicMap = new HashMap<>();
-    protected Map<Integer, Subtask> subtaskMap = new HashMap<>();
-    HistoryManager historyManager = Manager.getDefaultHistory();
+    protected final Map<Integer, Task> taskMap = new HashMap<>();
+    protected final Map<Integer, Epic> epicMap = new HashMap<>();
+    protected final Map<Integer, Subtask> subtaskMap = new HashMap<>();
+    private final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -230,6 +230,25 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subtasksByEpic;
 
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        if (task != null && taskMap.containsKey(task.getId())) {
+            taskMap.put(task.getId(), task);
+        } else {
+            System.out.println("Task не найден");
+        }
+    }
+
+    @Override
+    public void updateEpic(Epic epic) {
+        if (epic != null && epicMap.containsKey(epic.getId())) {
+            epicMap.put(epic.getId(), epic);
+            updateEpicStatus(epic);
+        } else {
+            System.out.println("Epic не найден");
+        }
     }
 
     private void updateEpicStatus(Epic epic) {

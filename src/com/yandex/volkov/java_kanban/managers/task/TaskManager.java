@@ -51,6 +51,9 @@ public interface TaskManager {
 
     List<Subtask> getAllSubtaskInEpic(int id);
 
+    void updateTask(Task task);
+
+    void updateEpic(Epic epic);
 }
 
 

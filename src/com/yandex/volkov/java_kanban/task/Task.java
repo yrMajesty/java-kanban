@@ -21,7 +21,6 @@ public class Task {
         this.status = status;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -62,7 +61,6 @@ public class Task {
         return id == task.id && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions) && Objects.equals(status, task.status);
 
     }
-
 
     @Override
     public String toString() {
