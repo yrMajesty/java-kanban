@@ -92,28 +92,19 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
 
     public Subtask getSubtask(int id) {
-        Subtask subtask = subtaskMap.get(id);
-        if (subtask != null) {
-            historyManager.add(subtaskMap.get(id));
-        }
+
         return subtaskMap.get(id);
     }
 
     @Override
     public List<Epic> getAllEpics() {
-        if (epicMap.size() == 0) {
-            System.out.println("Данные с EPIC отсутсвуют");
-            return Collections.emptyList();
-        }
+
         return new ArrayList<>(epicMap.values());
     }
 
     @Override
     public List<Subtask> getAllSubtasks() {
-        if (subtaskMap.size() == 0) {
-            System.out.println("Данные с SUBTASK отсутсвуют");
-            return Collections.emptyList();
-        }
+
         return new ArrayList<>(subtaskMap.values());
     }
 

@@ -1,10 +1,14 @@
 package com.yandex.volkov.java_kanban.converter;
 
+import com.yandex.volkov.java_kanban.managers.history.HistoryManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
 import com.yandex.volkov.java_kanban.task.TaskType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskConverter {
 
@@ -81,5 +85,42 @@ public class TaskConverter {
         Task task = new Task(title, descriptions, status);
         task.setId(id);
         return task;
+    }
+    public static TaskType getTypeFromLine(String line) {
+        String[] split = line.split(",");
+        return TaskType.valueOf(split[1].toUpperCase());
+    }
+
+    public static List<Integer> historyFromString(String value) {
+        List<Integer> stringHistory = new ArrayList<>();
+        if (value != null) {
+            String[] id = value.split(",");
+
+            for (String number : id) {
+                stringHistory.add(Integer.parseInt(number));
+            }
+
+            return stringHistory;
+        }
+        return stringHistory;
+    }
+
+    public static String historyToString(HistoryManager manager) {
+        List<Task> history = manager.getHistory();
+        StringBuilder sb = new StringBuilder();
+
+        if (history.isEmpty()) {
+            return "";
+        }
+
+        for (Task task : history) {
+            sb.append(task.getId()).append(",");
+        }
+
+        if (sb.length() != 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
+        return sb.toString();
     }
 }
