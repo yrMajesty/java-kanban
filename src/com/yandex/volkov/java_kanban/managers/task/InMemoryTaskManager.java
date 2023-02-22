@@ -1,6 +1,5 @@
 package com.yandex.volkov.java_kanban.managers.task;
 
-import com.yandex.volkov.java_kanban.managers.Manager;
 import com.yandex.volkov.java_kanban.managers.history.HistoryManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
@@ -10,11 +9,12 @@ import com.yandex.volkov.java_kanban.task.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected int nextId = 1;
-    protected final Map<Integer, Task> taskMap = new HashMap<>();
-    protected final Map<Integer, Epic> epicMap = new HashMap<>();
-    protected final Map<Integer, Subtask> subtaskMap = new HashMap<>();
-    private final HistoryManager historyManager;
+    protected int nextId = 0;
+    protected final Set<Integer> idSet = new HashSet<>();
+    protected Map<Integer, Task> taskMap = new HashMap<>();
+    protected Map<Integer, Epic> epicMap = new HashMap<>();
+    protected Map<Integer, Subtask> subtaskMap = new HashMap<>();
+    protected HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -92,19 +92,28 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
 
     public Subtask getSubtask(int id) {
-
+        Subtask subtask = subtaskMap.get(id);
+        if (subtask != null) {
+            historyManager.add(subtaskMap.get(id));
+        }
         return subtaskMap.get(id);
     }
 
     @Override
     public List<Epic> getAllEpics() {
-
+        if (epicMap.size() == 0) {
+            System.out.println("Данные с EPIC отсутсвуют");
+            return Collections.emptyList();
+        }
         return new ArrayList<>(epicMap.values());
     }
 
     @Override
     public List<Subtask> getAllSubtasks() {
-
+        if (subtaskMap.size() == 0) {
+            System.out.println("Данные с SUBTASK отсутсвуют");
+            return Collections.emptyList();
+        }
         return new ArrayList<>(subtaskMap.values());
     }
 
@@ -120,7 +129,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task addNewTask(Task task) {
         if (task == null) return null;
-        task.setId(nextId++);
+        task.setId(getNextId());
         taskMap.put(task.getId(), task);
         return task;
     }
@@ -128,10 +137,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic addNewEpic(Epic epic) {
         if (epic == null) return null;
-        epic.setId(nextId++);
+        epic.setId(getNextId());
         epicMap.put(epic.getId(), epic);
         for (Subtask subtask : subtaskMap.values()) {
-            if (epic.getId() == subtask.getEpicId()) {
+            if (epic.getId().equals(subtask.getEpicId())) {
                 epic.getSubtaskId().add(subtask.getId());
             }
         }
@@ -141,12 +150,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask addNewSubtask(Subtask subtask) {
         if (subtask == null) return null;
-        subtask.setId(nextId++);
+        subtask.setId(getNextId());
         subtaskMap.put(subtask.getId(), subtask);
 
         for (Epic epic : epicMap.values()) {
             if (epic != null) {
-                if (epic.getId() == subtask.getEpicId()) {
+                if (epic.getId().equals(subtask.getEpicId())) {
                     epic.getSubtaskId().add(subtask.getId());
                 }
                 if (epicMap.containsKey(subtask.getEpicId())) {
@@ -158,6 +167,13 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return subtask;
+    }
+
+    private int getNextId() {
+        do {
+            nextId++;
+        } while (idSet.contains(nextId));
+        return nextId;
     }
 
     @Override
@@ -189,7 +205,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpic(int id) {
-        if (epicMap.get(id).getSubtaskId() == null) return;
+        if (epicMap.get(id) == null || epicMap.get(id).getSubtaskId() == null) return;
 
         List<Integer> subEpic = epicMap.get(id).getSubtaskId();
         for (int subtaskId : subEpic) {
@@ -241,6 +257,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Epic не найден");
         }
     }
+
 
     private void updateEpicStatus(Epic epic) {
         int statusNew = 0;

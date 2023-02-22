@@ -1,11 +1,7 @@
 package com.yandex.volkov.java_kanban.converter;
 
 import com.yandex.volkov.java_kanban.managers.history.HistoryManager;
-import com.yandex.volkov.java_kanban.task.Epic;
-import com.yandex.volkov.java_kanban.task.Status;
-import com.yandex.volkov.java_kanban.task.Subtask;
-import com.yandex.volkov.java_kanban.task.Task;
-import com.yandex.volkov.java_kanban.task.TaskType;
+import com.yandex.volkov.java_kanban.task.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,36 +12,17 @@ public class TaskConverter {
     }
 
     public static String toString(Task task) {
-        String[] toJoin = {
-                Integer.toString(task.getId()),
-                TaskType.TASK.toString(),
-                task.getTitle(),
-                task.getDescriptions(),
-                task.getStatus().toString(),
-        };
+        String[] toJoin = {Integer.toString(task.getId()), TaskType.TASK.toString(), task.getTitle(), task.getDescriptions(), task.getStatus().toString(),};
         return String.join(",", toJoin) + ',' + null + "\n";
     }
 
     public static String toString(Epic task) {
-        String[] toJoin = {
-                Integer.toString(task.getId()),
-                TaskType.EPIC.toString(),
-                task.getTitle(),
-                task.getDescriptions(),
-                task.getStatus().toString(),
-        };
+        String[] toJoin = {Integer.toString(task.getId()), TaskType.EPIC.toString(), task.getTitle(), task.getDescriptions(), task.getStatus().toString(),};
         return String.join(",", toJoin) + ',' + null + "\n";
     }
 
     public static String toString(Subtask task) {
-        String[] toJoin = {
-                Integer.toString(task.getId()),
-                TaskType.SUBTASK.toString(),
-                task.getTitle(),
-                task.getDescriptions(),
-                task.getStatus().toString(),
-                task.getEpicId().toString()
-        };
+        String[] toJoin = {Integer.toString(task.getId()), TaskType.SUBTASK.toString(), task.getTitle(), task.getDescriptions(), task.getStatus().toString(), task.getEpicId().toString()};
         return String.join(",", toJoin) + "\n";
     }
 
@@ -75,6 +52,11 @@ public class TaskConverter {
         return subtask;
     }
 
+    public static TaskType getTypeFromLine(String line) {
+        String[] split = line.split(",");
+        return TaskType.valueOf(split[1].toUpperCase());
+    }
+
     public static Task getTaskFromString(String value) {
         String[] split = value.split(",");
         int id = Integer.parseInt(split[0]);
@@ -85,10 +67,6 @@ public class TaskConverter {
         Task task = new Task(title, descriptions, status);
         task.setId(id);
         return task;
-    }
-    public static TaskType getTypeFromLine(String line) {
-        String[] split = line.split(",");
-        return TaskType.valueOf(split[1].toUpperCase());
     }
 
     public static List<Integer> historyFromString(String value) {

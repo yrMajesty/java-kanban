@@ -1,11 +1,11 @@
 id,type,title,descriptions,status,epic
 1,TASK,Task #1,#1 Тут могла быть ваша реклама,NEW,null
 2,TASK,Task #2,#2 Тут могла быть ваша реклама,IN_PROGRESS,null
+3,EPIC,Epic #1,Epic1 description,IN_PROGRESS,null
+4,EPIC,Epic #2,Epic2 description,DONE,null
 5,SUBTASK,Subtask #1-1,Subtask1 description,NEW,3
 6,SUBTASK,Subtask #1-2,Subtask2 description,IN_PROGRESS,3
 7,SUBTASK,Subtask #1-3,Subtask3 description,DONE,3
 8,SUBTASK,Subtask #2-1,Subtask1 description,DONE,4
-3,EPIC,Epic #1,Epic1 description,IN_PROGRESS,null
-4,EPIC,Epic #2,Epic2 description,DONE,null
 
-3,2,1,4
+6,3,2,1,4
