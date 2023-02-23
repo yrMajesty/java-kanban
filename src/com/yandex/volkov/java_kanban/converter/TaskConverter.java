@@ -3,6 +3,7 @@ package com.yandex.volkov.java_kanban.converter;
 import com.yandex.volkov.java_kanban.managers.history.HistoryManager;
 import com.yandex.volkov.java_kanban.task.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +13,27 @@ public class TaskConverter {
     }
 
     public static String toString(Task task) {
-        String[] toJoin = {Integer.toString(task.getId()), TaskType.TASK.toString(), task.getTitle(), task.getDescriptions(), task.getStatus().toString(),};
+        String[] toJoin = {Integer.toString(task.getId()),
+                TaskType.TASK.toString(), task.getTitle(), task.getDescriptions(),
+                task.getStatus().toString(), DataConverter.DATE_TIME_FORMATTER.format(task.getStartTime()),
+                String.valueOf(task.getDuration()),};
         return String.join(",", toJoin) + ',' + null + "\n";
     }
 
     public static String toString(Epic task) {
-        String[] toJoin = {Integer.toString(task.getId()), TaskType.EPIC.toString(), task.getTitle(), task.getDescriptions(), task.getStatus().toString(),};
+        String[] toJoin = {Integer.toString(task.getId()),
+                TaskType.EPIC.toString(), task.getTitle(), task.getDescriptions(),
+                task.getStatus().toString(), DataConverter.DATE_TIME_FORMATTER.format(task.getStartTime()),
+                String.valueOf(task.getDuration()),};
         return String.join(",", toJoin) + ',' + null + "\n";
     }
 
     public static String toString(Subtask task) {
-        String[] toJoin = {Integer.toString(task.getId()), TaskType.SUBTASK.toString(), task.getTitle(), task.getDescriptions(), task.getStatus().toString(), task.getEpicId().toString()};
+        String[] toJoin = {Integer.toString(task.getId()),
+                TaskType.SUBTASK.toString(), task.getTitle(), task.getDescriptions(),
+                task.getStatus().toString(), task.getEpicId().toString(),
+                DataConverter.DATE_TIME_FORMATTER.format(task.getStartTime()),
+                String.valueOf(task.getDuration())};
         return String.join(",", toJoin) + "\n";
     }
 
@@ -32,8 +43,10 @@ public class TaskConverter {
         String title = split[2];
         String descriptions = split[3];
         Status status = Status.valueOf(split[4].toUpperCase());
+        LocalDateTime startTime = LocalDateTime.parse(split[5], DataConverter.DATE_TIME_FORMATTER);
+        long duration = Long.parseLong(split[6]);
 
-        Epic epic = new Epic(title, descriptions, status);
+        Epic epic = new Epic(title, descriptions, status, startTime, duration);
         epic.setId(id);
         epic.setStatus(status);
         return epic;
@@ -46,8 +59,10 @@ public class TaskConverter {
         String descriptions = split[3];
         Status status = Status.valueOf(split[4].toUpperCase());
         int epicId = Integer.parseInt(split[5]);
+        LocalDateTime startTime = LocalDateTime.parse(split[6], DataConverter.DATE_TIME_FORMATTER);
+        long duration = Long.parseLong(split[7]);
 
-        Subtask subtask = new Subtask(title, descriptions, status, epicId);
+        Subtask subtask = new Subtask(title, descriptions, status, epicId, startTime, duration);
         subtask.setId(id);
         return subtask;
     }
@@ -63,8 +78,9 @@ public class TaskConverter {
         String title = split[2];
         String descriptions = split[3];
         Status status = Status.valueOf(split[4].toUpperCase());
-
-        Task task = new Task(title, descriptions, status);
+        LocalDateTime startTime = LocalDateTime.parse(split[5], DataConverter.DATE_TIME_FORMATTER);
+        long duration = Long.parseLong(split[6]);
+        Task task = new Task(title, descriptions, status, startTime, duration);
         task.setId(id);
         return task;
     }

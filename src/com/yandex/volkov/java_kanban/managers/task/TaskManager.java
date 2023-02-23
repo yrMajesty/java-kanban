@@ -1,7 +1,7 @@
 package com.yandex.volkov.java_kanban.managers.task;
 
-
 import com.yandex.volkov.java_kanban.task.Epic;
+import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
 
@@ -54,6 +54,10 @@ public interface TaskManager {
     void updateTask(Task task);
 
     void updateEpic(Epic epic);
+
+    void updateSubtask(Subtask subtask);
+    List<Task> getPrioritizedTasks();
+
 }
 
 

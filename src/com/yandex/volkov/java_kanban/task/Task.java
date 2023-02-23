@@ -1,5 +1,10 @@
 package com.yandex.volkov.java_kanban.task;
 
+import com.yandex.volkov.java_kanban.converter.DataConverter;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,18 +12,21 @@ public class Task {
     String title;
     String descriptions;
     Status status;
+    LocalDateTime startTime;
+    long durationInMinutes;
 
     public Task(String title, String descriptions, Status status) {
-        this.title = title;
         this.descriptions = descriptions;
+        this.title = title;
         this.status = status;
     }
 
-    public Task(int id, String title, String descriptions, Status status) {
-        this.id = id;
-        this.title = title;
+    public Task(String title, String descriptions, Status status, LocalDateTime startTime, long durationInMinutes) {
         this.descriptions = descriptions;
+        this.title = title;
         this.status = status;
+        this.startTime = startTime;
+        this.durationInMinutes = durationInMinutes;
     }
 
     public Integer getId() {
@@ -53,19 +61,50 @@ public class Task {
         this.status = status;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getDuration() {
+        return durationInMinutes;
+    }
+
+    public void setDuration(long durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(durationInMinutes);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions) && Objects.equals(status, task.status);
-
+        return durationInMinutes == task.durationInMinutes && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions) && status == task.status && Objects.equals(startTime, task.startTime);
     }
 
     @Override
-    public String toString() {
-        return "Task{" + "id=" + getId() + ", title='" + getTitle() + '\'' + ", descriptions='" + getDescriptions() + '\'' + ", status='" + getStatus() + '\'' + '}';
+    public int hashCode() {
+        return Objects.hash(title, descriptions, status, startTime, durationInMinutes);
     }
+
+//    @Override
+//    public String toString() {
+//        return "Task{" +
+//                "id=" + id +
+//                ", title='" + getTitle() + '\'' +
+//                ", descriptions='" + getDescriptions() + '\'' +
+//                ", status=" + status + '\'' +
+//                ", startTime='" + DataConverter.DATE_TIME_FORMATTER.format(startTime) + '\'' +
+//                ", duration='" + durationInMinutes +
+//                '}';
+//    }
 
 
 }
