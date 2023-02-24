@@ -1,8 +1,9 @@
 package com.yandex.volkov.java_kanban.converter;
 
-import com.yandex.volkov.java_kanban.managers.history.HistoryManager;
+import com.yandex.volkov.java_kanban.managers.HistoryManager;
 import com.yandex.volkov.java_kanban.task.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class TaskConverter {
         String[] toJoin = {Integer.toString(task.getId()),
                 TaskType.TASK.toString(), task.getTitle(), task.getDescriptions(),
                 task.getStatus().toString(), DataConverter.DATE_TIME_FORMATTER.format(task.getStartTime()),
-                String.valueOf(task.getDuration()),};
+                String.valueOf(task.getDuration().toMinutes())};
         return String.join(",", toJoin) + ',' + null + "\n";
     }
 
@@ -24,7 +25,7 @@ public class TaskConverter {
         String[] toJoin = {Integer.toString(task.getId()),
                 TaskType.EPIC.toString(), task.getTitle(), task.getDescriptions(),
                 task.getStatus().toString(), DataConverter.DATE_TIME_FORMATTER.format(task.getStartTime()),
-                String.valueOf(task.getDuration()),};
+                String.valueOf(task.getDuration().toMinutes())};
         return String.join(",", toJoin) + ',' + null + "\n";
     }
 
@@ -33,7 +34,7 @@ public class TaskConverter {
                 TaskType.SUBTASK.toString(), task.getTitle(), task.getDescriptions(),
                 task.getStatus().toString(), task.getEpicId().toString(),
                 DataConverter.DATE_TIME_FORMATTER.format(task.getStartTime()),
-                String.valueOf(task.getDuration())};
+                String.valueOf(task.getDuration().toMinutes())};
         return String.join(",", toJoin) + "\n";
     }
 

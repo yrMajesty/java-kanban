@@ -1,7 +1,5 @@
 package com.yandex.volkov.java_kanban.task;
 
-import com.yandex.volkov.java_kanban.converter.DataConverter;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +33,4 @@ public class Epic extends Task {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Epic{" +
-//                "subtaskIds=" + subtasks +
-//                ", id=" + getId() +
-//                ", title='" + getTitle() + '\'' +
-//                ", descriptions='" + getDescriptions() + '\'' +
-//                ", status=" + getStatus() + '\'' +
-//                ", startTime='" + getStartTime().format(DataConverter.DATE_TIME_FORMATTER) + '\'' +
-//                ", endTime='" + getEndTime().format(DataConverter.DATE_TIME_FORMATTER) + '\'' +
-//                ", duration='" + getDuration() +
-//                '}';
-//    }
 }

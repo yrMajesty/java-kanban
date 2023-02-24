@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
-    Integer id;
-    String title;
-    String descriptions;
-    Status status;
-    LocalDateTime startTime;
-    long durationInMinutes;
+    private Integer id;
+    private String title;
+    private String descriptions;
+    private Status status;
+    private LocalDateTime startTime;
+    Duration durationInMinutes;
 
     public Task(String title, String descriptions, Status status) {
         this.descriptions = descriptions;
@@ -26,7 +26,7 @@ public class Task {
         this.title = title;
         this.status = status;
         this.startTime = startTime;
-        this.durationInMinutes = durationInMinutes;
+        this.durationInMinutes = Duration.ofMinutes(durationInMinutes);
     }
 
     public Integer getId() {
@@ -69,16 +69,16 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public long getDuration() {
+    public Duration getDuration() {
         return durationInMinutes;
     }
 
-    public void setDuration(long durationInMinutes) {
-        this.durationInMinutes = durationInMinutes;
+    public void setDuration(Duration duration) {
+        this.durationInMinutes = duration;
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(durationInMinutes);
+        return startTime.plus(durationInMinutes);
     }
 
     @Override
@@ -93,18 +93,4 @@ public class Task {
     public int hashCode() {
         return Objects.hash(title, descriptions, status, startTime, durationInMinutes);
     }
-
-//    @Override
-//    public String toString() {
-//        return "Task{" +
-//                "id=" + id +
-//                ", title='" + getTitle() + '\'' +
-//                ", descriptions='" + getDescriptions() + '\'' +
-//                ", status=" + status + '\'' +
-//                ", startTime='" + DataConverter.DATE_TIME_FORMATTER.format(startTime) + '\'' +
-//                ", duration='" + durationInMinutes +
-//                '}';
-//    }
-
-
 }

@@ -1,7 +1,5 @@
 package com.yandex.volkov.java_kanban.task;
 
-import com.yandex.volkov.java_kanban.converter.DataConverter;
-
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {
@@ -32,19 +30,4 @@ public class Subtask extends Task {
     public Integer getEpicId() {
         return epicId;
     }
-//
-//    @Override
-//    public String toString() {
-//        return "Subtask{" +
-//                "epicId=" + getEpicId() +
-//                ", id=" + getId() +
-//                ", title='" + getTitle() + '\'' +
-//                ", descriptions='" + getDescriptions() + '\'' +
-//                ", status=" + getStatus() + '\'' +
-//                ", startTime='" + getStartTime().format(DataConverter.DATE_TIME_FORMATTER) + '\'' +
-//                ", endTime='" + getEndTime().format(DataConverter.DATE_TIME_FORMATTER) + '\'' +
-//                ", duration='" + getDuration() +
-//                '}';
-//    }
-
 }
