@@ -11,66 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-//    public static void main(String[] args) {
-//        Path path = Path.of("data.csv");
-//        File file = new File(String.valueOf(path));
-//
-//        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(Manager.getDefaultHistory(), file);
-//        System.out.println("История до:");
-//        System.out.println(fileBackedTasksManager.getHistory() + "\n");
-//        Task task1 = new Task("Task #1", "#1 Тут могла быть ваша реклама", Status.IN_PROGRESS, Instant.now(), 5); //1
-//        Task task2 = new Task("Task #2", "#2 Тут могла быть ваша реклама", Status.IN_PROGRESS, Instant.now(), 0); //2
-//
-//        Epic epic1 = new Epic("Epic #1", "Epic1 description", Status.NEW, Instant.now(), 2); //3
-//        Epic epic2 = new Epic("Epic #2", "Epic2 description", Status.IN_PROGRESS, Instant.now(), 3); //4
-//
-//        Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask1 description", Status.NEW, 3, Instant.now(), 3); //5
-//        Subtask subtask2 = new Subtask("Subtask #1-2", "Subtask2 description", Status.IN_PROGRESS, 3, Instant.now(), 2 ); //6
-//        Subtask subtask3 = new Subtask("Subtask #1-3", "Subtask3 description", Status.NEW, 3,Instant.now(), 5); //7
-//        Subtask subtask4 = new Subtask("Subtask #2-1", "Subtask1 description", Status.NEW, 4, Instant.now(), 1); //8
-//
-//
-//        fileBackedTasksManager.addNewTask(task1);
-//        fileBackedTasksManager.addNewTask(task2);
-//        fileBackedTasksManager.addNewEpic(epic1);
-//        fileBackedTasksManager.addNewEpic(epic2);
-//        fileBackedTasksManager.addNewSubtask(subtask1);
-//        fileBackedTasksManager.addNewSubtask(subtask2);
-//        fileBackedTasksManager.addNewSubtask(subtask3);
-//        fileBackedTasksManager.addNewSubtask(subtask4);
-//
-//
-//        fileBackedTasksManager.getSubtask(6);
-//        fileBackedTasksManager.getEpic(4);
-//        fileBackedTasksManager.getEpic(3);
-//        fileBackedTasksManager.getTask(1);
-//        fileBackedTasksManager.getTask(2);
-//        fileBackedTasksManager.getTask(1);
-//        fileBackedTasksManager.getEpic(4);
-//        fileBackedTasksManager.getSubtask(6);
-//
-//
-//        FileBackedTasksManager fileBackedTasksManager2 = new FileBackedTasksManager(Manager.getDefaultHistory(), file);
-//        fileBackedTasksManager2.loadFromFile();
-//
-//        System.out.println("Задачи");
-//        System.out.println(fileBackedTasksManager2.getAllTasks());
-//        System.out.println("Эпики");
-//        System.out.println(fileBackedTasksManager2.getAllEpics());
-//        System.out.println("Подзадачи");
-//        System.out.println(fileBackedTasksManager2.getAllSubtasks());
-//        System.out.println("История");
-//        System.out.println(fileBackedTasksManager2.getHistory());
-//
-//    }
 
     private final File file;
     private static final String TITLE = "id,type,title,descriptions,status,startTime,duration,epic\n";
 
-    static public FileBackedTasksManager loadedFromFileTasksManager(HistoryManager historyManager, File file) {
+    public static FileBackedTasksManager loadedFromFileTasksManager(HistoryManager historyManager, File file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(historyManager, file);
         fileBackedTasksManager.loadFromFile();
         return fileBackedTasksManager;
+    }
+
+    public FileBackedTasksManager() {
+        file = new File("default.csv");
     }
 
     public FileBackedTasksManager(HistoryManager historyManager, File file) {
@@ -78,7 +30,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    private void save() {
+    public FileBackedTasksManager(String file) {
+        this.file = new File(file);
+        historyManager = Manager.getDefaultHistory();
+    }
+
+    public void save() {
         try {
             if (Files.exists(file.toPath())) {
                 Files.delete(file.toPath());

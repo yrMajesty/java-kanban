@@ -23,6 +23,10 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
+    public InMemoryTaskManager() {
+        this.historyManager = Manager.getDefaultHistory();
+    }
+
     public Map<Integer, Task> getTaskMap() {
         return taskMap;
     }
@@ -42,8 +46,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Epic> getAllEpic() {
         if (epicMap.size() == 0) {
-            System.out.println("Данные с EPIC отсутсвуют");
-            return null;
+            System.out.println("Данные с EPIC отсутствуют");
+            return Collections.emptyList();
         }
         return new ArrayList<>(epicMap.values());
     }
@@ -52,7 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getAllTask() {
         if (taskMap.size() == 0) {
             System.out.println("Данные с TASK отсутствуют");
-            return null;
+            return Collections.emptyList();
         }
         return new ArrayList<>(taskMap.values());
     }
@@ -101,7 +105,7 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(task);
             historyManager.add(taskMap.get(id));
         }
-        return taskMap.get(id);
+        return task;
     }
 
     @Override
@@ -110,7 +114,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             historyManager.add(epicMap.get(id));
         }
-        return epicMap.get(id);
+        return epic;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(subtask);
             historyManager.add(subtaskMap.get(id));
         }
-        return subtaskMap.get(id);
+        return subtask;
     }
 
     @Override

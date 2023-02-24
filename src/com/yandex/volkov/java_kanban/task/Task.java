@@ -86,11 +86,11 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return durationInMinutes == task.durationInMinutes && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions) && status == task.status && Objects.equals(startTime, task.startTime);
+        return Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(descriptions, task.descriptions) && status == task.status && Objects.equals(startTime, task.startTime) && Objects.equals(durationInMinutes, task.durationInMinutes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, descriptions, status, startTime, durationInMinutes);
+        return Objects.hash(id, title, descriptions, status, startTime, durationInMinutes);
     }
 }
