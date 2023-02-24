@@ -8,7 +8,6 @@ import com.yandex.volkov.java_kanban.task.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -391,10 +390,19 @@ public class InMemoryTaskManager implements TaskManager {
             }
             LocalDateTime taskStart = task.getStartTime();
             LocalDateTime taskFinish = task.getEndTime();
-            if (!(newTaskStart.isAfter(taskFinish) || newTaskFinish.isBefore(taskStart) ||
-                    newTaskStart.equals(taskFinish) || newTaskFinish.equals(taskStart))) {
+            if(newTaskStart.equals(taskStart) || newTaskFinish.equals(taskFinish)){
                 return true;
             }
+            if(newTaskStart.isAfter(taskStart) && newTaskFinish.isBefore(taskFinish)){
+                return true;
+            }
+            if(newTaskStart.isBefore(taskStart) && newTaskFinish.isAfter(taskFinish)){
+                return true;
+            }
+            if(newTaskFinish.isAfter(taskStart) && newTaskStart.isBefore(taskFinish)){
+                return true;
+            }
+
         }
         return false;
     }
