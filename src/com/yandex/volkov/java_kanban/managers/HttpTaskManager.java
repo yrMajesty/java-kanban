@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.yandex.volkov.java_kanban.adapters.DurationAdapter;
 import com.yandex.volkov.java_kanban.adapters.LocalDateTimeAdapter;
+import com.yandex.volkov.java_kanban.exceptions.HttpException;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Subtask;
 import com.yandex.volkov.java_kanban.task.Task;
@@ -14,7 +15,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-
 
 public class HttpTaskManager extends FileBackedTasksManager {
     private final static Gson GSON;
@@ -30,9 +30,14 @@ public class HttpTaskManager extends FileBackedTasksManager {
 
     public HttpTaskManager(String urlKVServer) {
         kvTaskClient = new KVTaskClient(urlKVServer);
+        try {
+            load();
+        }catch (HttpException e){
+            System.out.println("Ошибка загрузки");
+        }
     }
 
-    public void load() {
+    private void load() {
         int id = 0;
         String strTasks = kvTaskClient.load("tasks");
         Collection<Task> tasks = GSON.fromJson(strTasks, new TypeToken<Collection<Task>>() {}.getType());
@@ -70,7 +75,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void save() {
+    protected void save() {
         String strTaskData = GSON.toJson(getAllTasks());
         String strEpicData = GSON.toJson(getAllEpics());
         String strSubtaskData = GSON.toJson(getAllSubtasks());

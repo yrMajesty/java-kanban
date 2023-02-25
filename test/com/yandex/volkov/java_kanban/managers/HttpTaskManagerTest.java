@@ -1,9 +1,6 @@
 package com.yandex.volkov.java_kanban.managers;
 
 import com.yandex.volkov.java_kanban.exceptions.HttpException;
-import com.yandex.volkov.java_kanban.managers.HttpTaskManager;
-import com.yandex.volkov.java_kanban.managers.Manager;
-import com.yandex.volkov.java_kanban.managers.TaskManager;
 import com.yandex.volkov.java_kanban.task.Epic;
 import com.yandex.volkov.java_kanban.task.Status;
 import com.yandex.volkov.java_kanban.task.Subtask;
@@ -18,10 +15,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals ;
 
-public class HttpTaskManagerTest {
-    private static TaskManager httpManager;
+public class HttpTaskManagerTest extends TaskManagerTest<TaskManager>{
     private static KVServer kvServer;
     private static String urlKVServer;
     private HttpTaskManager loadedManager;
@@ -37,7 +33,7 @@ public class HttpTaskManagerTest {
             urlKVServer = "http://localhost:8078/";
             kvServer = new KVServer();
             kvServer.start();
-            httpManager = Manager.getDefault();
+            manager = Manager.getDefault();
         } catch (IOException e) {
             throw new HttpException("Ошибка при запуске сервера");
         }
@@ -61,35 +57,34 @@ public class HttpTaskManagerTest {
 
     void createAndLoadManager(){
         loadedManager = new HttpTaskManager(urlKVServer);
-        loadedManager.load();
     }
 
     @Test
     void loadManager_historyEqualsSavedHistory_createTaskAndLoadManagerWithEmptyHistory() {
-        httpManager.addNewTask(task);
+        manager.addNewTask(task);
 
         createAndLoadManager();
 
         List<Task> loadedHistory = loadedManager.getHistory();
 
-        assertEquals(httpManager.getHistory(), loadedHistory, "Сохраненная и восстановленная история не равны");
+        assertEquals(manager.getHistory(), loadedHistory, "Сохраненная и восстановленная история не равны");
     }
 
     @Test
     void loadManager_historyEqualsSavedHistory_createAndViewedTaskAndLoadManager() {
-        httpManager.addNewTask(task);
-        httpManager.getTask(task.getId());
+        manager.addNewTask(task);
+        manager.getTask(task.getId());
 
         createAndLoadManager();
 
         List<Task> loadedHistory = loadedManager.getHistory();
 
-        assertEquals(httpManager.getHistory(), loadedHistory, "Сохраненная и восстановленная история не равны");
+        assertEquals(manager.getHistory(), loadedHistory, "Сохраненная и восстановленная история не равны");
     }
 
     @Test
     void loadManager_loadableTaskEqualsSavedTask_createTaskAndLoadManager() {
-        httpManager.addNewTask(task);
+        manager.addNewTask(task);
 
         createAndLoadManager();
 
@@ -99,7 +94,7 @@ public class HttpTaskManagerTest {
 
     @Test
     void loadManager_loadableEpicEqualsSavedEpic_createEpicAndLoadManager() {
-        httpManager.addNewEpic(epic);
+        manager.addNewEpic(epic);
 
         createAndLoadManager();
 
@@ -110,11 +105,11 @@ public class HttpTaskManagerTest {
 
     @Test
     void loadManager_loadableEpicEqualsSavedEpicWithSubtasks_createEpicAndLoadManager() {
-        httpManager.addNewEpic(epic);
+        manager.addNewEpic(epic);
         subtask1.setEpicId(epic.getId());
         subtask2.setEpicId(epic.getId());
-        httpManager.addNewSubtask(subtask1);
-        httpManager.addNewSubtask(subtask2);
+        manager.addNewSubtask(subtask1);
+        manager.addNewSubtask(subtask2);
         List<Subtask> createdSubtasks = new ArrayList<>();
         createdSubtasks.add(subtask1);
         createdSubtasks.add(subtask2);

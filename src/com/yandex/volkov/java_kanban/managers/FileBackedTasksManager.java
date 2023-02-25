@@ -35,7 +35,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         historyManager = Manager.getDefaultHistory();
     }
 
-    public void save() {
+    protected void save() {
         try {
             if (Files.exists(file.toPath())) {
                 Files.delete(file.toPath());

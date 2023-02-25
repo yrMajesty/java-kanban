@@ -20,7 +20,7 @@ public class KVTaskClient {
         this.apiToken = registration();
     }
 
-    private String registration(){
+    private String registration() {
         String uriRegister = urlDataTokenServer.concat("register/");
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -37,6 +37,7 @@ public class KVTaskClient {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .uri(URI.create(uriSave))
+                .version(HttpClient.Version.HTTP_1_1)
                 .build();
         sendRequest(request);
     }
@@ -46,6 +47,7 @@ public class KVTaskClient {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(uriLoad))
+                .version(HttpClient.Version.HTTP_1_1)
                 .build();
         return sendRequest(request).body();
     }
